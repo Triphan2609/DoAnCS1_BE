@@ -296,8 +296,8 @@ const searchBooks = async (req, res) => {
 const getCart = async (req, res) => {
     const { id_taiKhoan } = req.params;
     const sql = `SELECT * from sach, giohang, taikhoan 
-    WHERE sach.id_sach = gioHang.id_sach 
-    AND gioHang.id_taiKhoan = taikhoan.id_taiKhoan 
+    WHERE sach.id_sach = giohang.id_sach 
+    AND giohang.id_taiKhoan = taikhoan.id_taiKhoan 
     AND taikhoan.id_taiKhoan = ?;`;
 
     try {
