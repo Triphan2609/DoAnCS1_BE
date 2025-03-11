@@ -41,7 +41,7 @@ const updateBook = async (req, res) => {
     const thumbnail = req.file;
     try {
         if (thumbnail) {
-            const sql = `UPDATE Sach 
+            const sql = `UPDATE sach 
             set tenSach = ?, tacGia = ?, nhaXB = ?, nguoiDich = ?, namXB = ?, ngonNgu = ?, trongLuongGr = ?, 
             kichThuocBaoBi = ?, soTrang = ?, giaSach = ?, soLuongTonKho = ?, hinhThucSach = ?, maTheLoaiSach = ?, thumbnail = ?
             WHERE id_sach = ?`;
@@ -67,7 +67,7 @@ const updateBook = async (req, res) => {
                 EM: "Cập nhật sách thành công",
             });
         } else {
-            const sql = `UPDATE Sach
+            const sql = `UPDATE sach
             set tenSach = ?, tacGia = ?, nhaXB = ?, nguoiDich = ?, namXB = ?, ngonNgu = ?, trongLuongGr = ?,
             kichThuocBaoBi = ?, soTrang = ?, giaSach = ?, soLuongTonKho = ?,  hinhThucSach = ?, maTheLoaiSach = ? WHERE id_sach = ?
             `;
@@ -127,7 +127,7 @@ const updateCartQuantity = async (req, res) => {
     const { soLuongSach } = req.body;
 
     try {
-        const sql = `UPDATE GioHang
+        const sql = `UPDATE giohang
             set soLuongSach = ? WHERE id_gioHang = ?
             `;
         await pool.query(sql, [soLuongSach, id_gioHang]);
@@ -147,7 +147,7 @@ const updateCartQuantity = async (req, res) => {
 const resolveOrder = async (req, res) => {
     const id_donHang = req.params.id_donHang;
     try {
-        const sql = `UPDATE DonHang
+        const sql = `UPDATE donhang
             set trangThaiDonHang = 'Đã duyệt' WHERE id_donHang = ?
             `;
         await pool.query(sql, [id_donHang]);
@@ -167,7 +167,7 @@ const resolveOrder = async (req, res) => {
 const rejectOrder = async (req, res) => {
     const id_donHang = req.params.id_donHang;
     try {
-        const sql = `UPDATE DonHang
+        const sql = `UPDATE donhang
             set trangThaiDonHang = 'Đã hủy' WHERE id_donHang = ?
             `;
         await pool.query(sql, [id_donHang]);
@@ -188,15 +188,10 @@ const addInformations = async (req, res) => {
     const id_taiKhoan = req.params.id_taiKhoan;
     const { tenNhanHang, diaChiNhanHang, SDTNhanHang } = req.body;
     try {
-        const sql = `UPDATE TaiKhoan
+        const sql = `UPDATE taikhoan
             set tenNhanHang = ?, diaChiNhanHang = ?, SDTNhanHang = ? WHERE id_taiKhoan = ?
             `;
-        await pool.query(sql, [
-            tenNhanHang,
-            diaChiNhanHang,
-            SDTNhanHang,
-            id_taiKhoan,
-        ]);
+        await pool.query(sql, [tenNhanHang, diaChiNhanHang, SDTNhanHang, id_taiKhoan]);
         res.status(200).json({
             DATA: {
                 tenNhanHang,
@@ -216,12 +211,4 @@ const addInformations = async (req, res) => {
     }
 };
 
-export {
-    updateAccount,
-    updateBook,
-    updateCategory,
-    updateCartQuantity,
-    resolveOrder,
-    rejectOrder,
-    addInformations,
-};
+export { updateAccount, updateBook, updateCategory, updateCartQuantity, resolveOrder, rejectOrder, addInformations };

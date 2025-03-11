@@ -5,8 +5,7 @@ const deleteAccount = async (req, res) => {
 
     try {
         // Kiểm tra vai trò của tài khoản trước khi xóa
-        const checkRoleSql =
-            "SELECT vaiTro FROM taikhoan WHERE id_taiKhoan = ?";
+        const checkRoleSql = "SELECT vaiTro FROM taikhoan WHERE id_taiKhoan = ?";
         const [rows] = await pool.query(checkRoleSql, [id_taiKhoan]);
 
         if (rows.length === 0) {
@@ -72,8 +71,7 @@ const deleteBook = async (req, res) => {
 const deleteCategory = async (req, res) => {
     const maTheLoaiSach = req.params.maTheLoaiSach;
     try {
-        const deleteCategorySql =
-            "DELETE FROM theloaisach WHERE maTheLoaiSach = ?";
+        const deleteCategorySql = "DELETE FROM theloaisach WHERE maTheLoaiSach = ?";
         await pool.query(deleteCategorySql, [maTheLoaiSach]);
 
         res.status(200).json({
@@ -92,7 +90,7 @@ const deleteCategory = async (req, res) => {
 const deleteCart = async (req, res) => {
     const id_gioHang = req.params.id_gioHang;
     try {
-        const deleteCartSql = "DELETE FROM GioHang WHERE id_gioHang = ?";
+        const deleteCartSql = "DELETE FROM giohang WHERE id_gioHang = ?";
         await pool.query(deleteCartSql, [id_gioHang]);
 
         res.status(200).json({
@@ -112,11 +110,10 @@ const deleteOrder = async (req, res) => {
     const id_donHang = req.params.id_donHang;
 
     try {
-        const deleteOrderDetailSql =
-            "DELETE FROM Chitietdonhang WHERE id_donHang = ?";
+        const deleteOrderDetailSql = "DELETE FROM Chitietdonhang WHERE id_donHang = ?";
         await pool.query(deleteOrderDetailSql, [id_donHang]);
 
-        const deleteOrderSql = "DELETE FROM DonHang WHERE id_donHang = ?";
+        const deleteOrderSql = "DELETE FROM donhang WHERE id_donHang = ?";
         await pool.query(deleteOrderSql, [id_donHang]);
 
         res.status(200).json({

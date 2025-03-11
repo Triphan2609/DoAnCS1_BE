@@ -21,7 +21,7 @@ const postCreateBook = async (req, res) => {
     } = req.body;
     const thumbnail = req.file.filename;
     try {
-        const sql = `insert into Sach 
+        const sql = `insert into sach 
         (tenSach, tacGia, nhaXB, nguoiDich, namXB, ngonNgu, trongLuongGr, 
         kichThuocBaoBi, soTrang, giaSach, soLuongTonKho, thumbnail, hinhThucSach, maTheLoaiSach)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -58,8 +58,7 @@ const postCreateAccount = async (req, res) => {
     const { email, tenTaiKhoan, matKhau, vaiTro } = req.body;
     const hashedPassword = bcrypt.hashSync(matKhau, 8);
     try {
-        const sql =
-            "INSERT INTO taikhoan (email,tenTaiKhoan,matKhau,vaiTro) VALUES (?, ?, ?, ?)";
+        const sql = "INSERT INTO taikhoan (email,tenTaiKhoan,matKhau,vaiTro) VALUES (?, ?, ?, ?)";
         await pool.query(sql, [email, tenTaiKhoan, hashedPassword, vaiTro]);
         res.status(200).json({
             EC: 0,
@@ -77,8 +76,7 @@ const postCreateAccount = async (req, res) => {
 const postCreateCategory = async (req, res) => {
     const { maTheLoaiSach, tenTheLoaiSach } = req.body;
     try {
-        const sql =
-            "insert into TheLoaiSach (maTheLoaiSach, tenTheLoaiSach) VALUES (?, ?)";
+        const sql = "insert into theloaisach (maTheLoaiSach, tenTheLoaiSach) VALUES (?, ?)";
         await pool.query(sql, [maTheLoaiSach, tenTheLoaiSach]);
         res.status(200).json({
             EC: 0,
@@ -100,7 +98,7 @@ const uploadImages = async (req, res) => {
     const { id_sach } = req.body;
     const imagePaths = req.files.map((file) => file.filename);
 
-    const sql = `INSERT INTO HinhAnhSach (id_sach, hinhAnh) VALUES ?`;
+    const sql = `INSERT INTO hinhanhsach (id_sach, hinhAnh) VALUES ?`;
     const values = imagePaths.map((path) => [id_sach, path]);
 
     try {
@@ -120,7 +118,7 @@ const uploadImages = async (req, res) => {
 
 const uploadDesc = async (req, res) => {
     const { id_sach, noiDung } = req.body;
-    const sql = `INSERT INTO MoTaSach (id_sach, noiDung) VALUES (?, ?)`;
+    const sql = `INSERT INTO motasach (id_sach, noiDung) VALUES (?, ?)`;
 
     try {
         await pool.query(sql, [id_sach, noiDung]);
@@ -139,9 +137,9 @@ const uploadDesc = async (req, res) => {
 
 const postCreateCart = async (req, res) => {
     const { id_sach, id_taiKhoan, soLuongSach } = req.body;
-    const checkSql = `SELECT * FROM GioHang WHERE id_sach = ? AND id_taiKhoan = ?`;
-    const updateSql = `UPDATE GioHang SET soLuongSach = soLuongSach + ? WHERE id_sach = ? AND id_taiKhoan = ?`;
-    const insertSql = `INSERT INTO GioHang (id_sach, id_taiKhoan, soLuongSach) VALUES (?, ?, ?)`;
+    const checkSql = `SELECT * FROM giohang WHERE id_sach = ? AND id_taiKhoan = ?`;
+    const updateSql = `UPDATE giohang SET soLuongSach = soLuongSach + ? WHERE id_sach = ? AND id_taiKhoan = ?`;
+    const insertSql = `INSERT INTO giohang (id_sach, id_taiKhoan, soLuongSach) VALUES (?, ?, ?)`;
 
     try {
         const [rows] = await pool.query(checkSql, [id_sach, id_taiKhoan]);
@@ -171,28 +169,13 @@ const postCreateCart = async (req, res) => {
 };
 
 const postCreateOrder = async (req, res) => {
-    const {
-        id_taiKhoan,
-        hoTenKH,
-        diaChiKH,
-        SDT,
-        soLuongSanPham,
-        tongTien,
-        sach,
-    } = req.body;
+    const { id_taiKhoan, hoTenKH, diaChiKH, SDT, soLuongSanPham, tongTien, sach } = req.body;
 
-    const sql = `INSERT INTO DonHang (id_taiKhoan, hoTenKH, diaChiKH, SDT, soLuongSanPham, tongTien) 
+    const sql = `INSERT INTO donhang (id_taiKhoan, hoTenKH, diaChiKH, SDT, soLuongSanPham, tongTien) 
                 VALUES (?, ?, ?, ?, ?, ?)`;
 
     try {
-        await pool.query(sql, [
-            id_taiKhoan,
-            hoTenKH,
-            diaChiKH,
-            SDT,
-            soLuongSanPham,
-            tongTien,
-        ]);
+        await pool.query(sql, [id_taiKhoan, hoTenKH, diaChiKH, SDT, soLuongSanPham, tongTien]);
         res.status(200).json({
             EC: 0,
         });
@@ -208,11 +191,7 @@ const postCreateOrderDetail = async (req, res) => {
     const { id_donHang, dataBooksCart } = req.body;
 
     // Lặp qua mảng dataBooksCart để lấy các giá trị cần thiết
-    const values = dataBooksCart.map((item) => [
-        id_donHang,
-        item.id_sach,
-        item.soLuongSach,
-    ]);
+    const values = dataBooksCart.map((item) => [id_donHang, item.id_sach, item.soLuongSach]);
 
     const sql = `INSERT INTO Chitietdonhang (id_donHang, id_sach, soLuongSach) VALUES ?`;
 
@@ -248,8 +227,7 @@ const register = async (req, res) => {
             });
         }
 
-        const sql =
-            "INSERT INTO taikhoan (email, tenTaiKhoan, matKhau, vaiTro) VALUES (?, ?, ?, 'USER')";
+        const sql = "INSERT INTO taikhoan (email, tenTaiKhoan, matKhau, vaiTro) VALUES (?, ?, ?, 'USER')";
         await pool.query(sql, [email, username, hashedPassword]);
 
         res.status(200).json({
@@ -288,13 +266,9 @@ const login = async (req, res) => {
             });
         }
 
-        const token = jwt.sign(
-            { id: user.id_taiKhoan, role: user.vaiTro },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: "1d",
-            }
-        );
+        const token = jwt.sign({ id: user.id_taiKhoan, role: user.vaiTro }, process.env.SECRET_KEY, {
+            expiresIn: "1d",
+        });
 
         res.status(200).json({
             DATA: {
@@ -331,65 +305,54 @@ const changePassword = async (req, res) => {
         }
         console.log(process.env.SECRET_KEY);
         // Verify token và lấy thông tin user từ token
-        jwt.verify(
-            token.split(" ")[1],
-            process.env.SECRET_KEY,
-            async (err, decoded) => {
-                if (err) {
-                    return res.status(403).json({
-                        EC: 1,
-                        EM: "Không tìm thấy token",
-                    });
-                }
-
-                const sql = "SELECT * FROM taikhoan WHERE id_taiKhoan = ?";
-                const [rows] = await pool.query(sql, [decoded.id]);
-
-                if (rows.length === 0) {
-                    return res.status(404).json({
-                        EC: 1,
-                        EM: "Không tìm thấy người dùng",
-                    });
-                }
-                const user = rows[0];
-
-                // Kiểm tra mật khẩu cũ
-                const passwordIsValid = bcrypt.compareSync(
-                    oldPassword,
-                    user.matKhau
-                );
-                if (!passwordIsValid) {
-                    return res.status(401).json({
-                        EC: 1,
-                        EM: "Sai mật khẩu",
-                    });
-                }
-
-                // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới có khớp nhau không
-                if (newPassword !== confirmNewPassword) {
-                    return res.status(400).json({
-                        EC: 1,
-                        EM: "Xác nhận mật khẩu không trùng khớp",
-                    });
-                }
-
-                // Mã hóa mật khẩu mới
-                const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
-
-                // Update mật khẩu trong database
-                const updateSql =
-                    "UPDATE taikhoan SET matKhau = ? WHERE id_taiKhoan = ?";
-                await pool.query(updateSql, [
-                    hashedNewPassword,
-                    user.id_taiKhoan,
-                ]);
-
-                res.status(200).json({
-                    EC: 0,
-                    EM: "Thay đổi mật khẩu thành công!",
+        jwt.verify(token.split(" ")[1], process.env.SECRET_KEY, async (err, decoded) => {
+            if (err) {
+                return res.status(403).json({
+                    EC: 1,
+                    EM: "Không tìm thấy token",
                 });
             }
-        );
+
+            const sql = "SELECT * FROM taikhoan WHERE id_taiKhoan = ?";
+            const [rows] = await pool.query(sql, [decoded.id]);
+
+            if (rows.length === 0) {
+                return res.status(404).json({
+                    EC: 1,
+                    EM: "Không tìm thấy người dùng",
+                });
+            }
+            const user = rows[0];
+
+            // Kiểm tra mật khẩu cũ
+            const passwordIsValid = bcrypt.compareSync(oldPassword, user.matKhau);
+            if (!passwordIsValid) {
+                return res.status(401).json({
+                    EC: 1,
+                    EM: "Sai mật khẩu",
+                });
+            }
+
+            // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới có khớp nhau không
+            if (newPassword !== confirmNewPassword) {
+                return res.status(400).json({
+                    EC: 1,
+                    EM: "Xác nhận mật khẩu không trùng khớp",
+                });
+            }
+
+            // Mã hóa mật khẩu mới
+            const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
+
+            // Update mật khẩu trong database
+            const updateSql = "UPDATE taikhoan SET matKhau = ? WHERE id_taiKhoan = ?";
+            await pool.query(updateSql, [hashedNewPassword, user.id_taiKhoan]);
+
+            res.status(200).json({
+                EC: 0,
+                EM: "Thay đổi mật khẩu thành công!",
+            });
+        });
     } catch (err) {
         res.status(500).json({
             EC: 1,
