@@ -19,6 +19,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routers
 initAPIRoute(app);
 
-app.listen(process.env.port, () => {
-    console.log(`Sever running in port ${process.env.port}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Sever running in port ${process.env.PORT}`);
 });
